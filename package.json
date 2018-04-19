@@ -1,0 +1,51 @@
+{
+  "name": "adobe-illustrator-scripts",
+  "version": "1.0.0",
+  "description": "Handy scripts for Adobe Illustrator.",
+  "author": "Daniel Bayley <daniel.bayley@me.com> (http://github.com/danielbayley)",
+  "private": true,
+  "license": "MIT",
+  "os": [
+    "darwin"
+  ],
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-extendscript": "^0.1.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.2.0",
+    "chokidar-cli": "^1.2.0",
+    "coffeeify": "^3.0.1",
+    "coffeescript": "^2.2.4",
+    "globify": "^2.3.1",
+    "wrapp": "max-os/wrapp"
+  },
+  "browserify": {
+    "transform": [
+      "coffeeify",
+      [
+        "babelify",
+        {
+          "comments": false,
+          "extensions": [
+            ".coffee"
+          ],
+          "presets": [
+            "extendscript"
+          ]
+        }
+      ]
+    ]
+  },
+  "config": {
+    "scripts": "/Applications/Adobe*/*Illustrator*/Presets*/*/Scripts([-1])",
+    "glob": "**/*.coffee"
+  },
+  "scripts": {
+    "preinstall": "npm config set script-shell /bin/zsh --userconfig .npmrc",
+    "postinstall": "npm run compile -- $npm_package_config_glob",
+    "compile": "scripts=($~npm_package_config_scripts); globify --exclude node_modules -o $scripts/\\*.jsx --",
+    "postcompile": "npm run wrapp",
+    "wrapp": "wrapp */*.*sh --name 'Merge PDF' --output $~npm_package_config_scripts",
+    "watch": "npm run postinstall -- --watch & chokidar '*/*.*sh' -c 'npm run wrapp'"
+  }
+}
