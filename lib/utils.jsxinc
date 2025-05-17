@@ -1,0 +1,13 @@
+var document = app.activeDocument
+var selected = document.selection[0]
+
+function skew(selected, x, y) {
+  var matrix = app.getIdentityMatrix()
+  matrix.mValueA  = 1
+  matrix.mValueB  = Math.tan(Math.PI / 180 * y || 0)
+  matrix.mValueC  = Math.tan(Math.PI / 180 * x || 0)
+  matrix.mValueD  = 1
+  matrix.mValueTX = 0
+  matrix.mValueTY = 0
+  selected.transform(matrix, true, true, true, true, 1)
+}
